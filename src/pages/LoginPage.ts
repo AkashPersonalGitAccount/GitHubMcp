@@ -24,4 +24,12 @@ export class LoginPage {
   async getErrorMessage() {
     return this.page.textContent(this.errorMessage);
   }
+
+  async maximize(browserName: string) {
+    if (browserName === 'chromium') {
+      const session = await (this.page.context() as any).newCDPSession(this.page);
+      const { windowId } = await session.send('Browser.getWindowForTarget');
+      await session.send('Browser.setWindowBounds', { windowId, bounds: { windowState: 'maximized' } });
+    }
+  }
 } 
